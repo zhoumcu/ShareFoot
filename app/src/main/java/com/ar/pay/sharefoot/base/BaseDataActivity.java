@@ -17,12 +17,12 @@ import cn.bmob.v3.BmobConfig;
  * email：1032324589@qq.com
  */
 
-public abstract class BaseDataActivity<T> extends AppCompatActivity implements OnResult{
+public abstract class BaseDataActivity<M> extends AppCompatActivity implements OnResult<M>{
     public abstract void onUICreate(Bundle savedInstanceState);
     public abstract void onEvent();
     public abstract void onInitView();
     public abstract void onInitData();
-    protected abstract void setData(T o);
+    protected abstract void setData(M o);
 
     public SqlHelper sqlHelper = new SqlHelper(this);
 
@@ -31,14 +31,14 @@ public abstract class BaseDataActivity<T> extends AppCompatActivity implements O
         super.onCreate(savedInstanceState);
         onUICreate(savedInstanceState);
         initBmob();
+        onInitView();
         onInitData();
         onEvent();
-        onInitView();
     }
 
     @Override
-    public void onSucess(Object o) {
-        setData((T)o);
+    public void onSucess(M o) {
+        setData(o);
     }
 
     @Override

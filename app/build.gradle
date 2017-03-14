@@ -1,7 +1,20 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
+def releaseTime() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
 android {
+    signingConfigs {
+        release {
+            keyAlias 'zhou'
+            keyPassword '080502101'
+            storeFile file('F:/zhou/androids.jks')
+            storePassword '080502101'
+        }
+    }
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -14,10 +27,27 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            debuggable true
+            minifyEnabled true //启用Proguard
+            shrinkResources true //是否清理无用资源,依赖于minifyEnabled
+            zipAlignEnabled true //是否启用zipAlign压缩
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            if (variant.buildType.name.equals('release')) {
+                def fileName = "养生阁${defaultConfig.versionName}_${releaseTime()}_release.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }else if(variant.buildType.name.equals('debug')){
+                def fileName = "养生阁${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+                output.outputFile = new File(outputFile.parent, fileName)
+            }
+        }
+    }
+
     /**兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**/
     useLibrary 'org.apache.http.legacy'
 }

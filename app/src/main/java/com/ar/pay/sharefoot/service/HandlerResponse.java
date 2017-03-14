@@ -30,6 +30,11 @@ public abstract class HandlerResponse implements OnResult{
             }
         }
     };
+
+    public HandlerResponse() {
+
+    }
+
     @Override
     public void onSucess(Object o) {
         Message msg = new Message();

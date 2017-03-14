@@ -5,6 +5,7 @@ import android.util.Log;
 import com.ar.pay.sharefoot.bean.Category;
 import com.ar.pay.sharefoot.bean.Food;
 import com.ar.pay.sharefoot.bean.Person;
+import com.ar.pay.sharefoot.service.HandlerResponse;
 import com.ar.pay.sharefoot.service.OnResult;
 
 import org.json.JSONArray;
@@ -112,6 +113,26 @@ public class SqlHelper {
      * 查询数据
      */
     public static void queryFood(final OnResult onResult){
+        BmobQuery query =new BmobQuery("Food");
+        query.setLimit(20);
+        query.order("createdAt");
+        //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
+        query.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","查询成功："+ary.toString());
+                    onResult.onSucess(Food.arrayFoodsFromData(ary.toString()));
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+    }
+    /**
+     * 查询数据
+     */
+    public static void queryFood(final HandlerResponse onResult){
         BmobQuery query =new BmobQuery("Food");
         query.setLimit(20);
         query.order("createdAt");

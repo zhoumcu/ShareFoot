@@ -7,11 +7,14 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.ar.pay.sharefoot.base.BaseDataActivity;
 import com.ar.pay.sharefoot.bean.Category;
 import com.ar.pay.sharefoot.fragment.CookBookFragment;
 import com.ar.pay.sharefoot.fragment.FootFragment;
+import com.ar.pay.sharefoot.service.HandlerResponse;
+import com.ar.pay.sharefoot.utils.SharedPreferences;
 import com.lhh.apst.library.AdvancedPagerSlidingTabStrip;
 
 import java.util.ArrayList;
@@ -20,11 +23,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class MainActivity extends BaseDataActivity<List<Category>> {
     @BindView(R.id.tabs)
     AdvancedPagerSlidingTabStrip tabs;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+
     private List<Category> categoryList = new ArrayList<>();//= {"美食鉴赏","菜谱","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技"};
     private List<Fragment> flist = new ArrayList<>();
     private myPagerAdapter adapter;
@@ -41,22 +46,32 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     @Override
     public void onInitView() {
         viewPager.setOffscreenPageLimit(5);
-        adapter = new MainActivity.myPagerAdapter(getSupportFragmentManager());
+        adapter = new myPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         tabs.setViewPager(viewPager);
     }
 
     @Override
     public void onInitData() {
-        sqlHelper.queryCategory();
+
+        if(SharedPreferences.getInstance().readObject("cateroty")==null){
+            sqlHelper.queryCategory();
+        }else {
+            categoryList = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
+            pareseData(categoryList);
+        }
 //        sqlHelper.createCategory();
     }
 
     @Override
     protected void setData(List<Category> o) {
         categoryList = o;
-        for (Category category : o){
-            switch (category.getUiType()){
+        SharedPreferences.getInstance().saveObject("cateroty",o);
+        pareseData(o);
+    }
+    private void pareseData(List<Category> o){
+        for (Category category : o) {
+            switch (category.getUiType()) {
                 case 0:
                     FootFragment foot = new FootFragment();
                     flist.add(foot);
@@ -70,11 +85,18 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
         adapter.notifyDataSetChanged();
         tabs.notifyDataSetChanged();
     }
-
     @Override
     public void onEvent() {
 
     }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
+
     private class myPagerAdapter extends FragmentPagerAdapter {
 
         public myPagerAdapter(FragmentManager fm) {
@@ -99,7 +121,7 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home_menu,menu);
+        getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
 

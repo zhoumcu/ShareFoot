@@ -6,7 +6,7 @@ package com.ar.pay.sharefoot.service;
  * email：1032324589@qq.com
  */
 
-public interface OnResult {
-    public void onSucess(Object o);
+public interface OnResult<M> {
+    public void onSucess(M o);
     public void onErro();
 }
