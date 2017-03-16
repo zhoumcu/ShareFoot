@@ -21,7 +21,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity"
+
+        <activity android:name=".activity.SplashingActivity"
+            android:theme="@style/Animation.Splash"
             android:label="养生阁"
             android:logo="@mipmap/category" >
             <intent-filter>
@@ -30,6 +32,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity"
+            android:label="养生阁"
+            android:logo="@mipmap/category" >
+        </activity>
+        <activity android:name=".activity.MenuActivity"
+            android:theme="@style/Animation.Mine"/>
+        <activity android:name=".activity.SearchActivity"
+            android:theme="@style/Animation.Mine"/>
+        <activity android:name=".activity.EditTextActivity"
+            android:theme="@style/Animation.Other"/>
+        <activity android:name=".activity.ArticleActivity"
+            android:theme="@style/Animation.Other"/>
     </application>
 
 </manifest>

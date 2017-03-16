@@ -46,7 +46,7 @@ public abstract class BaseListDataFragment<M> extends Fragment implements OnResu
             //设置Item增加、移除动画
             recycler.setItemAnimator(new DefaultItemAnimator());
             //添加分割线
-            SpaceDecoration itemDecoration = new SpaceDecoration((int) Utils.convertDpToPixel(8,getContext()));
+            SpaceDecoration itemDecoration = new SpaceDecoration((int) Utils.convertDpToPixel(4,getContext()));
             itemDecoration.setPaddingEdgeSide(true);
             itemDecoration.setPaddingStart(true);
             itemDecoration.setPaddingHeaderFooter(false);

@@ -92,6 +92,24 @@ public class SqlHelper {
             }
         });
     }
+    public static void createFoot(String title,String describer,String content,String imageUrl){
+        Food food = new Food();
+        food.setImageUrl(imageUrl);
+        food.setAuthor("zhoumcu");
+        food.setDescriber(describer);
+        food.setTitle(title);
+        food.setContent(content);
+        food.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId,BmobException e) {
+                if(e==null){
+                    Log.i("bmob","添加数据成功，返回objectId为："+objectId);
+                }else{
+                    Log.i("bmob","创建数据失败：" + e.getMessage());
+                }
+            }
+        });
+    }
     public static void createFoot(String imageUrl){
         Food food = new Food();
         food.setImageUrl(imageUrl);

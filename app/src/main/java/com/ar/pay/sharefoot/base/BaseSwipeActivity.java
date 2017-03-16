@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import cn.bmob.v3.Bmob;
@@ -17,7 +16,7 @@ import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
  * email：1032324589@qq.com
  */
 
-public abstract class BaseActivity extends AppCompatActivity{
+public abstract class BaseSwipeActivity extends SwipeBackActivity{
     public abstract void onUICreate(Bundle savedInstanceState);
     public abstract void onEvent();
     public abstract void onInitView();

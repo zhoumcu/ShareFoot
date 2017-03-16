@@ -1,19 +1,21 @@
 package com.ar.pay.sharefoot;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.ar.pay.sharefoot.activity.EditTextActivity;
+import com.ar.pay.sharefoot.activity.MenuActivity;
+import com.ar.pay.sharefoot.activity.SearchActivity;
 import com.ar.pay.sharefoot.base.BaseDataActivity;
 import com.ar.pay.sharefoot.bean.Category;
 import com.ar.pay.sharefoot.fragment.CookBookFragment;
 import com.ar.pay.sharefoot.fragment.FootFragment;
-import com.ar.pay.sharefoot.service.HandlerResponse;
 import com.ar.pay.sharefoot.utils.SharedPreferences;
 import com.lhh.apst.library.AdvancedPagerSlidingTabStrip;
 
@@ -22,6 +24,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 public class MainActivity extends BaseDataActivity<List<Category>> {
@@ -29,6 +32,8 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     AdvancedPagerSlidingTabStrip tabs;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+    @BindView(R.id.fab)
+    FloatingActionButton fab;
 
     private List<Category> categoryList = new ArrayList<>();//= {"美食鉴赏","菜谱","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技","科技"};
     private List<Fragment> flist = new ArrayList<>();
@@ -54,9 +59,9 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     @Override
     public void onInitData() {
 
-        if(SharedPreferences.getInstance().readObject("cateroty")==null){
+        if (SharedPreferences.getInstance().readObject("cateroty") == null) {
             sqlHelper.queryCategory();
-        }else {
+        } else {
             categoryList = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
             pareseData(categoryList);
         }
@@ -66,10 +71,11 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     @Override
     protected void setData(List<Category> o) {
         categoryList = o;
-        SharedPreferences.getInstance().saveObject("cateroty",o);
+        SharedPreferences.getInstance().saveObject("cateroty", o);
         pareseData(o);
     }
-    private void pareseData(List<Category> o){
+
+    private void pareseData(List<Category> o) {
         for (Category category : o) {
             switch (category.getUiType()) {
                 case 0:
@@ -85,6 +91,7 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
         adapter.notifyDataSetChanged();
         tabs.notifyDataSetChanged();
     }
+
     @Override
     public void onEvent() {
 
@@ -95,6 +102,11 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
         super.onCreate(savedInstanceState);
         // TODO: add setContentView(...) invocation
         ButterKnife.bind(this);
+    }
+
+    @OnClick(R.id.fab)
+    public void onClick() {
+        startActivityWithData(EditTextActivity.class);
     }
 
     private class myPagerAdapter extends FragmentPagerAdapter {
@@ -127,6 +139,16 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                toast("action_search");
+                startActivityWithData(SearchActivity.class);
+                break;
+            case android.R.id.home:
+                toast("home");
+                startActivityWithData(MenuActivity.class);
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

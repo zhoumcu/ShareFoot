@@ -1,5 +1,6 @@
 package com.ar.pay.sharefoot.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -59,6 +60,10 @@ public abstract class BaseDataActivity<M> extends AppCompatActivity implements O
         .setFileExpiration(2500)
         .build();
         Bmob.initialize(config);
+    }
+    public void startActivityWithData(Class<?> cl){
+        Intent intent = new Intent(this,cl);
+        startActivity(intent);
     }
     public void toast(String s) {
         Toast.makeText(this,s,Toast.LENGTH_SHORT).show();

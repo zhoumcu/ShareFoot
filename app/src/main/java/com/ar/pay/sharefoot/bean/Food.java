@@ -21,6 +21,16 @@ public class Food extends BmobObject{
     private String imageUrl;
     private String author;
 
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    private String content;
+
     public static List<Food> arrayFoodsFromData(String str) {
 
         Type listType = new TypeToken<ArrayList<Food>>() {
