@@ -4,27 +4,65 @@
     android:layout_height="match_parent"
     >
 
-    <jp.wasabeef.richeditor.RichEditor
-        android:id="@+id/editor"
+    <ScrollView
+        android:id="@+id/scrollContent"
         android:layout_weight="1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fadeScrollbars="true"
+        android:fillViewport="true" >
+        <!-- 中间内容视图代码 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/ed_title"
+                android:hint="输入文章标题"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/ed_describer"
+                android:hint="输入文章简介"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <android.support.v7.widget.AppCompatCheckedTextView
+                android:id="@+id/tv_choces"
+                android:text="请选择类型"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="40dp" />
+            <ImageView
+                android:id="@+id/img_add"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@mipmap/add_pic"/>
+            <jp.wasabeef.richeditor.RichEditor
+                android:id="@+id/editor"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="HTML Preview"
-        android:textSize="12sp"
-        />
+            <TextView
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="HTML Preview"
+                android:textSize="12sp"
+                />
 
-    <TextView
-        android:id="@+id/preview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        />
+            <TextView
+                android:visibility="gone"
+                android:id="@+id/preview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                />
+        </LinearLayout>
+
+    </ScrollView>
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

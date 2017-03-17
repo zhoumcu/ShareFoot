@@ -4,11 +4,43 @@
     app:cardBackgroundColor="@color/cardview_light_background"
     app:cardElevation="5dp"
     app:cardCornerRadius="10dp"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="240dp">
-    <ImageView
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ImageView
             android:id="@+id/img_food"
             android:scaleType="centerCrop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
+        <LinearLayout
+            android:alpha="0.8"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:padding="5dp"
+                android:background="@color/colorAccent"
+                android:id="@+id/tv_title"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:padding="2dp"
+                android:background="@color/colorAccent"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:textColor="@color/white"
+                android:id="@+id/tv_describer"
+                android:layout_gravity="bottom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </FrameLayout>
 </android.support.v7.widget.CardView>

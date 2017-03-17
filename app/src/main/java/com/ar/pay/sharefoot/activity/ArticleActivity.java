@@ -1,6 +1,7 @@
 package com.ar.pay.sharefoot.activity;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.ar.pay.sharefoot.R;
 import com.ar.pay.sharefoot.base.BaseActivity;
@@ -18,6 +19,12 @@ import butterknife.ButterKnife;
 public class ArticleActivity extends BaseActivity {
     @BindView(R.id.webView)
     ProgressWebView webView;
+    @BindView(R.id.tv_title)
+    TextView tvTitle;
+    @BindView(R.id.tv_data)
+    TextView tvData;
+    @BindView(R.id.tv_author)
+    TextView tvAuthor;
     private Food food;
 
     @Override
@@ -34,8 +41,11 @@ public class ArticleActivity extends BaseActivity {
 
     @Override
     public void onInitView() {
+        tvTitle.setText(food.getTitle());
+        tvData.setText(food.getCreatedAt());
+        tvAuthor.setText(food.getAuthor());
         webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadData(food.getContent(),"text/html","utf8");
+        webView.loadDataWithBaseURL(null, food.getContent(), "text/html", "UTF-8", null);
     }
 
     @Override
@@ -43,10 +53,4 @@ public class ArticleActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

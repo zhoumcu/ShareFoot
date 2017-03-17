@@ -3,6 +3,8 @@ package com.ar.pay.sharefoot.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,20 +20,16 @@ import com.ar.pay.sharefoot.base.BaseActivity;
  * email：1032324589@qq.com
  */
 
-public class SplashingActivity extends BaseActivity{
+public class SplashingActivity extends AppCompatActivity{
     @Override
-    public void onUICreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.aty_splash);
+        onInitView();
     }
 
-    @Override
-    public void onEvent() {
-
-    }
-
-    @Override
     public void onInitView() {
-//图标的放大及渐变效果
+        //图标的放大及渐变效果
         ImageView splash=(ImageView) findViewById(R.id.splash_image);
         AlphaAnimation alphaAnim = new AlphaAnimation(1.0f, 1.0f);
         alphaAnim.setDuration(2500);
@@ -51,16 +49,15 @@ public class SplashingActivity extends BaseActivity{
             @Override
             public void onAnimationEnd(Animation arg0) {
                 arg0.setFillAfter(true);
-                startActivityWithData(MainActivity.class);
+                startActivityWithData(Login.class);
                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_in_left);
                 finish();
             }
         });
         splash.setAnimation(animation);
     }
-
-    @Override
-    public void onInitData() {
-
+    public void startActivityWithData(Class<?> cl){
+        Intent intent = new Intent(this,cl);
+        startActivity(intent);
     }
 }

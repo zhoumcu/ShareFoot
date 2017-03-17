@@ -86,6 +86,7 @@ public class FootFragment extends BaseListDataFragment<List<Food>> {
     @Override
     protected void setData(List<Food> o) {
         listFood = o;
+        adapter.clear();
         adapter.addAll(o);
     }
 

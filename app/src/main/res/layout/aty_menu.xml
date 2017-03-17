@@ -1,30 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <RelativeLayout
-        android:background="@color/background"
+
+    <FrameLayout
+        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
         android:layout_height="180dp">
-        <include layout="@layout/title_bar"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher"
-            android:id="@+id/img_logo"
-            android:layout_gravity="center"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+        <com.wingjay.blurimageviewlib.BlurImageView
+            android:id="@+id/blurring_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
 
-        <TextView
-            android:text="@string/app_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/tv_name"
-            android:textColor="@color/white"
-            android:layout_below="@+id/img_logo"
-            android:layout_centerHorizontal="true" />
-    </RelativeLayout>
+            <include layout="@layout/title_bar"/>
 
+            <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true">
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:id="@+id/img_logo"
+                    android:layout_gravity="center"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true" />
+
+                <TextView
+                    android:text="@string/app_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tv_name"
+                    android:textColor="@color/white"
+                    android:layout_below="@+id/img_logo"
+                    android:layout_centerHorizontal="true" />
+            </LinearLayout>
+        </com.wingjay.blurimageviewlib.BlurImageView>
+
+    </FrameLayout>
+    <LinearLayout
+        android:background="@color/divide"
+        android:id="@+id/btn_minearticle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:gravity="center_horizontal"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp">
+
+            <TextView
+                android:text="10"
+                android:padding="15dp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_articlecount"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="我的文章"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+        <View
+            android:layout_width="1dp"
+            android:layout_margin="3dp"
+            android:background="@color/white"
+            android:layout_height="match_parent"/>
+        <RelativeLayout
+            android:id="@+id/btn_mineashare"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp">
+
+            <TextView
+                android:text="10"
+                android:padding="15dp"
+                android:textSize="30sp"
+                android:textColor="@color/colorPrimaryDark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_sharecount"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+
+            <TextView
+                android:text="我的分享"
+                android:padding="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" />
+        </RelativeLayout>
+
+    </LinearLayout>
+    <TextView
+        android:text="关于我们"
+        android:layout_marginTop="8dp"
+        android:padding="15dp"
+        android:drawableRight="@mipmap/box_arrow"
+        android:background="@color/divide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_about" />
+    <TextView
+        android:text="版本更新"
+        android:layout_marginTop="8dp"
+        android:padding="15dp"
+        android:drawableRight="@mipmap/box_arrow"
+        android:background="@color/divide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_update" />
 </LinearLayout>

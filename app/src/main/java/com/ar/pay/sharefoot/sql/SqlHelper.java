@@ -5,18 +5,23 @@ import android.util.Log;
 import com.ar.pay.sharefoot.bean.Category;
 import com.ar.pay.sharefoot.bean.Food;
 import com.ar.pay.sharefoot.bean.Person;
+import com.ar.pay.sharefoot.bean.User;
 import com.ar.pay.sharefoot.service.HandlerResponse;
 import com.ar.pay.sharefoot.service.OnResult;
 
 import org.json.JSONArray;
 
 import java.io.File;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 /**
@@ -32,6 +37,70 @@ public class SqlHelper {
         result = onResult;
     }
 
+    public static void registerUser(User p2){
+        Log.i("bmob","注册成功:");
+        p2.signUp(new SaveListener<User>() {
+            @Override
+            public void done(User s, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","注册成功:" +s.toString());
+                }else{
+
+                }
+            }
+        });
+    }
+    public static void login(User p2, final OnResult result){
+        p2.login(new SaveListener<User>() {
+            @Override
+            public void done(User bmobUser, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","登录成功:");
+                    result.onSucess(bmobUser);
+                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
+                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
+                }else{
+
+                }
+            }
+        });
+    }
+    public static void updateUser(User newUser, String imageUrl){
+        newUser.setImageUrl(imageUrl);
+        BmobUser bmobUser = BmobUser.getCurrentUser(User.class);
+        newUser.update(bmobUser.getObjectId(),new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    Log.i("bmob","更新用户信息成功");
+                }else{
+                    Log.i("bmob","更新用户信息失败:" + e.getMessage());
+                }
+            }
+        });
+    }
+    public static void uploadImageFile(final User user, String picPath){
+        final BmobFile bmobFile = new BmobFile(new File(picPath));
+        bmobFile.uploadblock(new UploadFileListener() {
+
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                    Log.e("test","上传文件成功:" + bmobFile.getFileUrl());
+                    updateUser(user,bmobFile.getFileUrl());
+                }else{
+                    Log.e("test","上传文件失败：" + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onProgress(Integer value) {
+                // 返回的上传进度（百分比）
+            }
+        });
+    }
     public static void createData(String imageUrl){
         Person p2 = new Person();
         p2.setName("lucky");
@@ -92,12 +161,36 @@ public class SqlHelper {
             }
         });
     }
-    public static void createFoot(String title,String describer,String content,String imageUrl){
+    public static void uploadFile(final String title, final String describer, final String content, final int categoryId, String picPath){
+        final BmobFile bmobFile = new BmobFile(new File(picPath));
+        bmobFile.uploadblock(new UploadFileListener() {
+
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    //bmobFile.getFileUrl()--返回的上传文件的完整地址
+                    Log.e("test","上传文件成功:" + bmobFile.getFileUrl());
+                    //createFoot(bmobFile.getFileUrl());
+                    createFoot(title,describer,content,categoryId,bmobFile.getFileUrl());
+                }else{
+                    Log.e("test","上传文件失败：" + e.getMessage());
+                }
+
+            }
+
+            @Override
+            public void onProgress(Integer value) {
+                // 返回的上传进度（百分比）
+            }
+        });
+    }
+    public static void createFoot(String title,String describer,String content,int categoryId,String imageUrl){
         Food food = new Food();
         food.setImageUrl(imageUrl);
         food.setAuthor("zhoumcu");
         food.setDescriber(describer);
         food.setTitle(title);
+        food.setCategoryId(categoryId);
         food.setContent(content);
         food.save(new SaveListener<String>() {
             @Override

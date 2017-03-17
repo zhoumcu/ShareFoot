@@ -73,6 +73,12 @@ dependencies {
     compile 'com.android.support:cardview-v7:25.2.0'
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.android.support:design:25.2.0'
-
+    //富文本输入框
     compile 'jp.wasabeef:richeditor-android:1.2.1'
+    //地址 设置选择器
+    compile 'com.contrarywind:Android-PickerView:3.1.1'
+    //图片选择器
+    compile 'com.foamtrace:photopicker:1.0'
+    //毛玻璃效果
+    compile 'com.wingjay:blurimageviewlib:2.0.1'
 }

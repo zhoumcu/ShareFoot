@@ -1,15 +1,20 @@
 package com.ar.pay.sharefoot.base;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
+
+import com.foamtrace.photopicker.ImageConfig;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobConfig;
-import me.imid.swipebacklayout.lib.app.SwipeBackActivity;
 
 /**
  * author：Administrator on 2017/3/13 09:09
@@ -28,6 +33,8 @@ public abstract class BaseActivity extends AppCompatActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         onUICreate(savedInstanceState);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
         initAni();
         initBmob();
         onInitData();
@@ -42,6 +49,13 @@ public abstract class BaseActivity extends AppCompatActivity{
         activityCloseEnterAnimation = activityStyle.getResourceId(0, 0);
         activityCloseExitAnimation = activityStyle.getResourceId(1, 0);
         activityStyle.recycle();
+
+        ImageConfig config = new ImageConfig();
+        config.minHeight = 400;
+        config.minWidth = 400;
+        config.mimeType = new String[]{"image/jpeg", "image/png"}; // 图片类型 image/gif ...
+        config.minSize = 1 * 1024 * 1024; // 1Mb 图片大小
+
     }
     private void initBmob() {
         //第二：自v3.4.7版本开始,设置BmobConfig,允许设置请求超时时间、文件分片上传时每片的大小、文件的过期时间(单位为秒)，
@@ -76,5 +90,23 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    public void close(){
+        /**隐藏软键盘**/
+        View view = getWindow().peekDecorView();
+        if (view != null) {
+            InputMethodManager inputmanger = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputmanger.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

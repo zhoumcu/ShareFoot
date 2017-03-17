@@ -65,7 +65,6 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
             categoryList = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
             pareseData(categoryList);
         }
-//        sqlHelper.createCategory();
     }
 
     @Override
@@ -95,13 +94,6 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     @Override
     public void onEvent() {
 
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     @OnClick(R.id.fab)

@@ -36,14 +36,32 @@
             android:label="养生阁"
             android:logo="@mipmap/category" >
         </activity>
+        <activity android:name=".activity.Login"
+            android:label="养生阁"
+             >
+        </activity>
+        <activity android:name=".activity.RegisterActivity"
+            android:label="养生阁"
+             >
+        </activity>
         <activity android:name=".activity.MenuActivity"
             android:theme="@style/Animation.Mine"/>
         <activity android:name=".activity.SearchActivity"
             android:theme="@style/Animation.Mine"/>
         <activity android:name=".activity.EditTextActivity"
+            android:configChanges="keyboardHidden|keyboard"
             android:theme="@style/Animation.Other"/>
         <activity android:name=".activity.ArticleActivity"
             android:theme="@style/Animation.Other"/>
+
+        <activity
+            android:name="com.foamtrace.photopicker.PhotoPickerActivity"
+            android:theme="@style/PhotoPickerTheme"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity"
+            android:theme="@style/PhotoPickerTheme"/>
+
     </application>
 
 </manifest>

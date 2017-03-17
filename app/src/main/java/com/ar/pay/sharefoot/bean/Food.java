@@ -21,6 +21,16 @@ public class Food extends BmobObject{
     private String imageUrl;
     private String author;
 
+    public int getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    private int categoryId;
+
     public String getContent() {
         return content;
     }
