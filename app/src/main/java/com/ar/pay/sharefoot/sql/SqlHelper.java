@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.ar.pay.sharefoot.bean.Category;
 import com.ar.pay.sharefoot.bean.Food;
+import com.ar.pay.sharefoot.bean.MyCollect;
 import com.ar.pay.sharefoot.bean.Person;
 import com.ar.pay.sharefoot.bean.User;
 import com.ar.pay.sharefoot.service.HandlerResponse;
@@ -12,13 +13,11 @@ import com.ar.pay.sharefoot.service.OnResult;
 import org.json.JSONArray;
 
 import java.io.File;
-import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
@@ -161,7 +160,7 @@ public class SqlHelper {
             }
         });
     }
-    public static void uploadFile(final String title, final String describer, final String content, final int categoryId, String picPath){
+    public static void uploadFile(final String author,final String title, final String describer, final String content, final int categoryId, String picPath){
         final BmobFile bmobFile = new BmobFile(new File(picPath));
         bmobFile.uploadblock(new UploadFileListener() {
 
@@ -171,7 +170,7 @@ public class SqlHelper {
                     //bmobFile.getFileUrl()--返回的上传文件的完整地址
                     Log.e("test","上传文件成功:" + bmobFile.getFileUrl());
                     //createFoot(bmobFile.getFileUrl());
-                    createFoot(title,describer,content,categoryId,bmobFile.getFileUrl());
+                    createFoot(author,title,describer,content,categoryId,bmobFile.getFileUrl());
                 }else{
                     Log.e("test","上传文件失败：" + e.getMessage());
                 }
@@ -184,10 +183,10 @@ public class SqlHelper {
             }
         });
     }
-    public static void createFoot(String title,String describer,String content,int categoryId,String imageUrl){
+    public static void createFoot(final String author,String title,String describer,String content,int categoryId,String imageUrl){
         Food food = new Food();
         food.setImageUrl(imageUrl);
-        food.setAuthor("zhoumcu");
+        food.setAuthor(author);
         food.setDescriber(describer);
         food.setTitle(title);
         food.setCategoryId(categoryId);
@@ -223,10 +222,32 @@ public class SqlHelper {
     /**
      * 查询数据
      */
-    public static void queryFood(final OnResult onResult){
+    public static void queryFood(int categoryId,final OnResult onResult){
         BmobQuery query =new BmobQuery("Food");
-        query.setLimit(20);
-        query.order("createdAt");
+        query.addWhereEqualTo("categoryId",categoryId);
+        query.setLimit(50);
+        query.order("-createdAt");
+        //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
+        query.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","查询成功："+ary.toString());
+                    onResult.onSucess(Food.arrayFoodsFromData(ary.toString()));
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+    }
+    /**
+     * 查询数据
+     */
+    public static void queryFood(String username,final OnResult onResult){
+        BmobQuery query =new BmobQuery("Food");
+        query.addWhereEqualTo("username",username);
+        query.setLimit(50);
+        query.order("-createdAt");
         //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
         query.findObjectsByTable(new QueryListener<JSONArray>() {
             @Override
@@ -290,6 +311,45 @@ public class SqlHelper {
                     Log.i("bmob","添加数据成功，返回objectId为："+objectId);
                 }else{
                     Log.i("bmob","创建数据失败：" + e.getMessage());
+                }
+            }
+        });
+    }
+    public static void createMyCollect(Food food,String username){
+        MyCollect collect = new MyCollect();
+        MyCollect.FoodEntity foodEntity = new MyCollect.FoodEntity();
+        foodEntity.setObjectId(food.getObjectId());
+        foodEntity.set__type("Pointer");
+        foodEntity.setClassName("Food");
+        collect.setObjectId(food.getObjectId());
+        collect.setUsername(username);
+        collect.setFood(foodEntity);
+        collect.save(new SaveListener<String>() {
+            @Override
+            public void done(String objectId,BmobException e) {
+                if(e==null){
+                    Log.i("bmob","添加数据成功，返回objectId为："+objectId);
+                }else{
+                    Log.i("bmob","创建数据失败：" + e.getMessage());
+                }
+            }
+        });
+    }
+    public static void queryMyCollect(final String username, final OnResult onResult){
+        BmobQuery query =new BmobQuery("MyCollect");
+        query.addWhereEqualTo("username",username);
+        query.setLimit(20);
+        query.order("-createdAt");
+        query.include("food");// 希望在查询帖子信息的同时也把发布人的信息查询出来
+        //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
+        query.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","查询成功："+ary.toString());
+                    onResult.onSucess(MyCollect.arrayMyCollectFromData(ary.toString()););
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }
             }
         });

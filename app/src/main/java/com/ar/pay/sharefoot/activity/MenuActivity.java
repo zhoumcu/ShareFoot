@@ -151,6 +151,7 @@ public class MenuActivity extends BaseSwipeActivity {
                 startActivityForResult(intent, REQUEST_CAMERA_CODE);
                 break;
             case R.id.btn_mineashare:
+                startActivityWithData(MyCollectActivity.class);
                 break;
             case R.id.btn_minearticle:
                 break;

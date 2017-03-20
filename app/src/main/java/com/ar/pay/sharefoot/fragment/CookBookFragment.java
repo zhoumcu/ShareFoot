@@ -36,6 +36,16 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
     @BindView(R.id.recycler)
     EasyRecyclerView recycler;
     private FootAdapter adapter;
+    private int categoryId = 0;
+
+    public static CookBookFragment getFragment(int categoryId) {
+        CookBookFragment cookBookFragment = new CookBookFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("categoryId",categoryId);
+        cookBookFragment.setArguments(bundle);
+        return cookBookFragment;
+    }
+
 
     @Nullable
     @Override
@@ -70,7 +80,9 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
     }
     @Override
     public void onInitData() {
-        SqlHelper.queryFood(new OnResult() {
+        categoryId = getArguments().getInt("categoryId");
+        Log.e("查询成功",categoryId+"");
+        SqlHelper.queryFood(categoryId,new OnResult() {
             @Override
             public void onSucess(Object o) {
                 Log.i("bmob","查询成功：");

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.ar.pay.sharefoot.R;
 import com.ar.pay.sharefoot.base.BaseActivity;
 import com.ar.pay.sharefoot.bean.Category;
+import com.ar.pay.sharefoot.bean.User;
 import com.ar.pay.sharefoot.sql.SqlHelper;
 import com.ar.pay.sharefoot.utils.SharedPreferences;
 import com.ar.pay.sharefoot.utils.imageload.GlideImageLoader;
@@ -26,6 +27,7 @@ import com.foamtrace.photopicker.PhotoPreviewActivity;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,6 +116,7 @@ public class EditTextActivity extends BaseActivity {
     private List<String> options = new ArrayList<>();
     private String path;
     private int categoryId;
+    private User user;
 
     @Override
     public void onUICreate(Bundle savedInstanceState) {
@@ -147,19 +150,15 @@ public class EditTextActivity extends BaseActivity {
 
     @Override
     public void onInitData() {
+        if(SharedPreferences.getInstance().readObject("user") != null){
+            user = (User) SharedPreferences.getInstance().readObject("user");
+        }
         if (SharedPreferences.getInstance().readObject("cateroty") != null) {
             options1Items = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
             for (Category category : options1Items){
                 options.add(category.getCategory());
             }
         }
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 
     @OnClick({R.id.tv_choces, R.id.img_add,R.id.action_undo, R.id.action_redo, R.id.action_bold, R.id.action_italic, R.id.action_subscript, R.id.action_superscript, R.id.action_strikethrough, R.id.action_underline, R.id.action_heading1, R.id.action_heading2, R.id.action_heading3, R.id.action_heading4, R.id.action_heading5, R.id.action_heading6, R.id.action_txt_color, R.id.action_bg_color, R.id.action_indent, R.id.action_outdent, R.id.action_align_left, R.id.action_align_center, R.id.action_align_right, R.id.action_insert_bullets, R.id.action_insert_numbers, R.id.action_blockquote, R.id.action_insert_image, R.id.action_insert_link, R.id.action_insert_checkbox, R.id.editor, R.id.preview})
@@ -313,16 +312,18 @@ public class EditTextActivity extends BaseActivity {
         switch (item.getItemId()) {
             case R.id.action_save:
                 toast("action_search");
+                SimpleDateFormat sDateFormat =new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                String date = sDateFormat.format(new java.util.Date());
                 SpannedString sp = new SpannedString("<h3>\n" +
                         "\t"+edTitle.getText().toString()+"\n" +
                         "</h3>\n" +
                         "<p>\n" +
-                        "\t"+"2016年10月20日"+ "&nbsp; &nbsp; &nbsp;" +"zhoumcu"+"\n" +
+                        "\t"+date+ "&nbsp; &nbsp; &nbsp;" +user.getUsername()+"\n" +
                         "</p>\n" +
                         "<p>\n" +
                         "\t<br />\n" +
                         "</p>");
-                SqlHelper.uploadFile(edTitle.getText().toString(),
+                SqlHelper.uploadFile(user.getUsername(),edTitle.getText().toString(),
                         edDescriber.getText().toString(), sp+mEditor.getHtml(),categoryId,
                         path);
                 break;

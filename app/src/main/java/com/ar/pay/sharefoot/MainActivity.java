@@ -78,11 +78,11 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
         for (Category category : o) {
             switch (category.getUiType()) {
                 case 0:
-                    FootFragment foot = new FootFragment();
+                    FootFragment foot =FootFragment.getFragment(category.getCategoryId());
                     flist.add(foot);
                     break;
                 case 1:
-                    CookBookFragment cookBookFragment = new CookBookFragment();
+                    CookBookFragment cookBookFragment = CookBookFragment.getFragment(category.getCategoryId());
                     flist.add(cookBookFragment);
                     break;
             }
