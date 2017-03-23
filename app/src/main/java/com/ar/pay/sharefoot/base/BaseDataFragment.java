@@ -15,6 +15,7 @@ import com.ar.pay.sharefoot.utils.ListConfig;
 import com.ar.pay.sharefoot.utils.Utils;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.decoration.SpaceDecoration;
+import com.pgyersdk.crash.PgyCrashManager;
 
 /**
  * author：Administrator on 2017/3/13 09:16
@@ -35,6 +36,7 @@ public abstract class BaseDataFragment<M> extends Fragment implements OnResult<M
 
         onInitView();
         onEvent();
+        PgyCrashManager.register(getContext());
     }
 
 
@@ -54,5 +56,10 @@ public abstract class BaseDataFragment<M> extends Fragment implements OnResult<M
     protected abstract void setData(M o);
     protected abstract void onInitView();
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PgyCrashManager.unregister();
+    }
 }
 

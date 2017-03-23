@@ -9,8 +9,8 @@ import android.os.Message;
  * email：1032324589@qq.com
  */
 
-public abstract class HandlerResponse implements OnResult{
-    public abstract void onHandlerSucess(Object obj);
+public abstract class HandlerResponse<T> implements OnResult<T>{
+    public abstract void onHandlerSucess(T obj);
     public abstract void onHandlerError();
     private static final int SUCESS = 0;
     private static final int ERROR = 1;
@@ -20,7 +20,7 @@ public abstract class HandlerResponse implements OnResult{
             super.handleMessage(msg);
             switch (msg.what){
                 case SUCESS:
-                    onHandlerSucess(msg.obj);
+                    onHandlerSucess((T)msg.obj);
                     break;
                 case ERROR:
                     onHandlerError();
@@ -31,9 +31,6 @@ public abstract class HandlerResponse implements OnResult{
         }
     };
 
-    public HandlerResponse() {
-
-    }
 
     @Override
     public void onSucess(Object o) {

@@ -6,46 +6,51 @@
     android:layout_height="match_parent">
 
     <FrameLayout
-        android:background="@color/colorPrimaryDark"
         android:layout_width="match_parent"
-        android:layout_height="180dp">
-        <com.wingjay.blurimageviewlib.BlurImageView
-            android:id="@+id/blurring_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
+        android:layout_height="220dp">
 
-            <include layout="@layout/title_bar"/>
+            <ImageView
+                android:id="@+id/img_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/test"/>
 
             <LinearLayout
+                android:id="@+id/bg_glass"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true">
-                <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:src="@mipmap/ic_launcher"
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/img_logo"
-                    android:layout_gravity="center"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_marginTop="20dp"
+                    android:src="@drawable/insert_image"
+                    app:civ_border_width="2dp"
+                    app:civ_border_color="@color/white"/>
 
                 <TextView
                     android:text="@string/app_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tv_name"
+                    android:textSize="28sp"
+                    android:gravity="center"
                     android:textColor="@color/white"
                     android:layout_below="@+id/img_logo"
                     android:layout_centerHorizontal="true" />
             </LinearLayout>
-        </com.wingjay.blurimageviewlib.BlurImageView>
-
+        <include layout="@layout/title_bar"/>
     </FrameLayout>
     <LinearLayout
+        android:visibility="gone"
         android:background="@color/divide"
         android:id="@+id/btn_minearticle"
         android:layout_width="match_parent"
@@ -99,7 +104,7 @@
                 android:layout_centerHorizontal="true" />
 
             <TextView
-                android:text="我的分享"
+                android:text="我的收藏"
                 android:padding="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,6 +113,24 @@
         </RelativeLayout>
 
     </LinearLayout>
+    <TextView
+        android:text="我的收藏"
+        android:layout_marginTop="8dp"
+        android:padding="15dp"
+        android:drawableRight="@mipmap/box_arrow"
+        android:background="@color/divide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_store" />
+    <TextView
+        android:text="反馈意见"
+        android:layout_marginTop="8dp"
+        android:padding="15dp"
+        android:drawableRight="@mipmap/box_arrow"
+        android:background="@color/divide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_feedbak" />
     <TextView
         android:text="关于我们"
         android:layout_marginTop="8dp"

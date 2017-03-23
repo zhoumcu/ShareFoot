@@ -1,5 +1,6 @@
 package com.ar.pay.sharefoot.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.ar.pay.sharefoot.R;
+import com.ar.pay.sharefoot.activity.ArticleActivity;
 import com.ar.pay.sharefoot.adapter.FootAdapter;
 import com.ar.pay.sharefoot.base.BaseFragment;
 import com.ar.pay.sharefoot.bean.Food;
@@ -18,12 +20,16 @@ import com.ar.pay.sharefoot.service.OnResult;
 import com.ar.pay.sharefoot.sql.SqlHelper;
 import com.ar.pay.sharefoot.utils.Utils;
 import com.jude.easyrecyclerview.EasyRecyclerView;
+import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
 import com.jude.easyrecyclerview.decoration.SpaceDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.R.id.list;
 
 /**
  * author：Administrator on 2017/3/13 09:16
@@ -37,6 +43,7 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
     EasyRecyclerView recycler;
     private FootAdapter adapter;
     private int categoryId = 0;
+    private List<Food> listFood = new ArrayList<>();
 
     public static CookBookFragment getFragment(int categoryId) {
         CookBookFragment cookBookFragment = new CookBookFragment();
@@ -57,7 +64,14 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
 
     @Override
     public void onEvent() {
-
+        adapter.setOnItemClickListener(new RecyclerArrayAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                Intent intent = new Intent(getContext(),ArticleActivity.class);
+                intent.putExtra("food",listFood.get(position));
+                startActivity(intent);
+            }
+        });
     }
     @Override
     protected void onInitView() {
@@ -86,8 +100,8 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
             @Override
             public void onSucess(Object o) {
                 Log.i("bmob","查询成功：");
-                List<Food> list = (List<Food>) o;
-                adapter.addAll(list);
+                listFood = (List<Food>) o;
+                adapter.addAll(listFood);
             }
 
             @Override
@@ -95,7 +109,7 @@ public class CookBookFragment extends BaseFragment implements SwipeRefreshLayout
 
             }
         });
-        recycler.setRefreshListener(this);
+//        recycler.setRefreshListener(this);
     }
 
     @Override

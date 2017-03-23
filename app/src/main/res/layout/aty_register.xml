@@ -5,6 +5,7 @@
     android:fitsSystemWindows="true"
     android:layout_width="fill_parent"
     android:orientation="vertical"
+    android:background="@color/divide"
     android:layout_height="fill_parent"
     android:weightSum="1">
 
@@ -20,7 +21,7 @@
 
         <RelativeLayout
             android:id="@+id/layoutPhone"
-            android:background="@color/divide"
+            android:background="@color/white"
             android:layout_width="fill_parent"
             android:layout_height="45.0dip">
 
@@ -50,7 +51,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="45.0dip"
-            android:background="@color/divide"
+            android:background="@color/white"
             android:layout_below="@+id/layoutPhone">
 
             <ImageView
@@ -77,7 +78,7 @@
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="45.0dip"
-            android:background="@color/divide"
+            android:background="@color/white"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
@@ -200,7 +201,7 @@
         android:layout_height="50.0dip"
         android:layout_marginLeft="18.0dip"
         android:layout_marginRight="18.0dip"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/select_button"
         android:clickable="true"
         android:enabled="true"
         android:text="注册"
@@ -210,5 +211,8 @@
         android:layout_above="@+id/btn_pwd"
         android:layout_centerHorizontal="true" />
 
-
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/health"/>
 </LinearLayout>

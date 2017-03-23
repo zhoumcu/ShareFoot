@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
+import com.pgyersdk.crash.PgyCrashManager;
+
 /**
  * author：Administrator on 2017/3/13 09:16
  * company: xxxx
@@ -20,7 +22,14 @@ public abstract class BaseFragment extends Fragment{
         onInitData();
         onInitView();
         onEvent();
+        PgyCrashManager.register(getContext());
     }
 
     protected abstract void onInitView();
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        PgyCrashManager.unregister();
+    }
 }

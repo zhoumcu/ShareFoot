@@ -20,13 +20,23 @@ public class MyCollect extends BmobObject{
      * className : Food
      */
 
-    private FoodEntity food;
+    private Food food;
 
     public String getUsername() {
         return username;
     }
 
     private String username;
+
+    public Boolean getCollect() {
+        return isCollect;
+    }
+
+    public void setCollect(Boolean collect) {
+        isCollect = collect;
+    }
+
+    private Boolean isCollect;
 
     public static List<MyCollect> arrayMyCollectFromData(String str) {
 
@@ -35,52 +45,14 @@ public class MyCollect extends BmobObject{
 
         return new Gson().fromJson(str, listType);
     }
-    public FoodEntity getFood() {
+    public Food getFood() {
         return food;
     }
-    public void setFood(FoodEntity food) {
+    public void setFood(Food food) {
         this.food = food;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public static class FoodEntity {
-        private String __type;ftf
-        private String objectId;
-        private String className;
-
-        public static List<FoodEntity> arrayFoodEntityFromData(String str) {
-
-            Type listType = new TypeToken<ArrayList<FoodEntity>>() {
-            }.getType();
-
-            return new Gson().fromJson(str, listType);
-        }
-
-        public String get__type() {
-            return __type;
-        }
-
-        public void set__type(String __type) {
-            this.__type = __type;
-        }
-
-        public String getObjectId() {
-            return objectId;
-        }
-
-        public void setObjectId(String objectId) {
-            this.objectId = objectId;
-        }
-
-        public String getClassName() {
-            return className;
-        }
-
-        public void setClassName(String className) {
-            this.className = className;
-        }
     }
 }

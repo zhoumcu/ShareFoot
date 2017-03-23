@@ -49,14 +49,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:id="@+id/btn_yuyue"
             android:layout_weight="1"
-            style="@style/loginBtnStyle"
             android:text="预约" />
-        <Button
-            android:id="@+id/btn_store"
-            android:layout_weight="1"
-            style="@style/loginBtnStyle"
-            android:text="收藏" />
+
     </LinearLayout>
 </LinearLayout>

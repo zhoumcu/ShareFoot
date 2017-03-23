@@ -1,19 +1,23 @@
 package com.ar.pay.sharefoot.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ar.pay.sharefoot.APP;
 import com.ar.pay.sharefoot.R;
 import com.ar.pay.sharefoot.base.BaseSwipeActivity;
 import com.ar.pay.sharefoot.bean.User;
 import com.ar.pay.sharefoot.sql.SqlHelper;
+import com.ar.pay.sharefoot.utils.Fglass;
 import com.ar.pay.sharefoot.utils.SharedPreferences;
 import com.ar.pay.sharefoot.utils.imageload.GlideImageLoader;
 import com.foamtrace.photopicker.ImageCaptureManager;
@@ -21,8 +25,11 @@ import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.PhotoPreviewActivity;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
+import com.pgyersdk.feedback.PgyFeedback;
+import com.pgyersdk.javabean.AppBean;
+import com.pgyersdk.update.PgyUpdateManager;
+import com.pgyersdk.update.UpdateManagerListener;
 import com.squareup.picasso.Picasso;
-import com.wingjay.blurimageviewlib.BlurImageView;
 
 import java.util.ArrayList;
 
@@ -30,6 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.BmobUser;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * author：Administrator on 2017/3/15 09:13
@@ -40,10 +48,9 @@ import cn.bmob.v3.BmobUser;
 public class MenuActivity extends BaseSwipeActivity {
     private static final int REQUEST_CAMERA_CODE = 1001;
     private static final int REQUEST_PREVIEW_CODE = 1002;
-    @BindView(R.id.blurring_view)
-    BlurImageView blurringView;
+
     @BindView(R.id.img_logo)
-    ImageView imgLogo;
+    CircleImageView imgLogo;
     @BindView(R.id.tv_name)
     TextView tvName;
     @BindView(R.id.tv_articlecount)
@@ -60,6 +67,12 @@ public class MenuActivity extends BaseSwipeActivity {
     TextView btnUpdate;
     @BindView(R.id.back)
     TextView back;
+    @BindView(R.id.btn_feedbak)
+    TextView btnFeedbak;
+    @BindView(R.id.img_bg)
+    ImageView imgBg;
+    @BindView(R.id.bg_glass)
+    LinearLayout bgGlass;
     private User user;
 
     @Override
@@ -75,72 +88,58 @@ public class MenuActivity extends BaseSwipeActivity {
 
     @Override
     public void onInitView() {
-//        customizeBlurImageView();
-//        int blurFactor = BlurImageView.DEFAULT_BLUR_FACTOR;
-//        blurringView.setBlurFactor(blurFactor);
-//        blurringView.setDefaultDrawable(getResources().getDrawable(R.drawable.test));
-//        blurringView.setFullImageByUrl(user.getImageUrl(),user.getImageUrl());
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Fglass.blur(imgBg, bgGlass, 2, 10);
+            }
+        }, 10);
     }
 
     @Override
     public void onInitData() {
+        btnUpdate.setText("版本更新   V" + APP.getInstances().getVersionName());
         user = (User) SharedPreferences.getInstance().readObject("user");
         Picasso.with(APP.getInstances().getApplicationContext())
                 .load(user.getImageUrl())
-                .resize(100, 100)
+                .resize(96, 96)
                 .centerCrop()
                 .into(imgLogo);
         tvName.setText(user.getUsername());
     }
 
-    private void customizeBlurImageView() {
-        blurringView.setProgressBarBgColor(blurImageViewProgressBgColor[getResIndex()]);
-        blurringView.setProgressBarColor(blurImageViewProgressClor[getResIndex()]);
+    private void update() {
+        PgyUpdateManager.register(this, "",
+                new UpdateManagerListener() {
+                    @Override
+                    public void onUpdateAvailable(final String result) {
+                        // 将新版本信息封装到AppBean中
+                        final AppBean appBean = getAppBeanFromString(result);
+                        new AlertDialog.Builder(MenuActivity.this)
+                                .setTitle("更新")
+                                .setMessage(appBean.getReleaseNote())
+                                .setNegativeButton("确定",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startDownloadTask(MenuActivity.this, appBean.getDownloadURL());
+                                            }
+                                        }).show();
+                    }
+
+                    @Override
+                    public void onNoUpdateAvailable() {
+                        Toast.makeText(MenuActivity.this, "没有新版本！", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
     protected void onDestroy() {
-        blurringView.cancelImageRequestForSafty();
         super.onDestroy();
     }
 
-    String[] mediumSmUrl = {
-            "http://upload-images.jianshu.io/upload_images/1825662-4c4e9bc7148749b7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/62",
-            "http://upload-images.jianshu.io/upload_images/1977600-c562e582d45a4dee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/62",
-            "http://upload-images.jianshu.io/upload_images/1761761-704c9d7ed34d112b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/62",
-            "http://upload-images.jianshu.io/upload_images/2557965-b224163bc8a4a695.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/62"
-    };
-
-    String[] mediumNmUrl = {
-            "http://upload-images.jianshu.io/upload_images/1825662-4c4e9bc7148749b7.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/620",
-            "http://upload-images.jianshu.io/upload_images/1977600-c562e582d45a4dee.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/620",
-            "http://upload-images.jianshu.io/upload_images/1761761-704c9d7ed34d112b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/620",
-            "http://upload-images.jianshu.io/upload_images/2557965-b224163bc8a4a695.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/620"
-    };
-    int currentIndex = 0;
-
-    int getResIndex() {
-        if (currentIndex > 3) {
-            currentIndex = currentIndex - 4;
-        }
-        return currentIndex;
-    }
-
-    int[] blurImageViewProgressBgColor = {
-            Color.BLACK,
-            Color.BLACK,
-            Color.parseColor("#E29C45"),
-            Color.parseColor("#E29C45"),
-    };
-
-    int[] blurImageViewProgressClor = {
-            Color.WHITE,
-            Color.parseColor("#789262"),
-            Color.parseColor("#7BCFA6"),
-            Color.parseColor("#519A73"),
-    };
-
-    @OnClick({R.id.back,R.id.img_logo, R.id.btn_mineashare, R.id.btn_minearticle, R.id.btn_about, R.id.btn_update})
+    @OnClick({R.id.btn_feedbak, R.id.btn_store, R.id.back, R.id.img_logo, R.id.btn_mineashare, R.id.btn_minearticle, R.id.btn_about, R.id.btn_update})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.img_logo:
@@ -150,24 +149,35 @@ public class MenuActivity extends BaseSwipeActivity {
                 // intent.setImageConfig(config);
                 startActivityForResult(intent, REQUEST_CAMERA_CODE);
                 break;
-            case R.id.btn_mineashare:
+            case R.id.btn_store:
                 startActivityWithData(MyCollectActivity.class);
                 break;
             case R.id.btn_minearticle:
                 break;
             case R.id.btn_about:
+                startActivityWithData(AboutActivity.class);
                 break;
             case R.id.btn_update:
+                update();
                 break;
             case R.id.back:
                 finish();
                 break;
+            case R.id.btn_feedbak:
+                // 以对话框的形式弹出
+                PgyFeedback.getInstance().showDialog(MenuActivity.this);
+                // 以Activity的形式打开，这种情况下必须在AndroidManifest.xml配置FeedbackActivity
+                // 打开沉浸式,默认为false
+                // FeedbackActivity.setBarImmersive(true);
+                PgyFeedback.getInstance().showActivity(MenuActivity.this);
+                break;
         }
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 // 选择照片
                 case REQUEST_CAMERA_CODE:
@@ -189,11 +199,19 @@ public class MenuActivity extends BaseSwipeActivity {
             }
         }
     }
-    private void refreshAdpater(ArrayList<String> paths){
+
+    private void refreshAdpater(ArrayList<String> paths) {
         // 处理返回照片地址
         User userInfo = BmobUser.getCurrentUser(User.class);
         String path = paths.get(0);
-        SqlHelper.uploadImageFile(userInfo,path);
-        new GlideImageLoader().loadGridItemView(imgLogo,paths.get(0),R.id.img_add,50,50);
+        SqlHelper.uploadImageFile(userInfo, path);
+        new GlideImageLoader().loadGridItemView(imgLogo, paths.get(0), R.id.img_add, 50, 50);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
     }
 }

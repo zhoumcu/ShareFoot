@@ -12,7 +12,6 @@ import com.ar.pay.sharefoot.activity.ArticleActivity;
 import com.ar.pay.sharefoot.adapter.FootAdapter;
 import com.ar.pay.sharefoot.base.BaseListDataFragment;
 import com.ar.pay.sharefoot.bean.Food;
-import com.ar.pay.sharefoot.bean.MyCollect;
 import com.ar.pay.sharefoot.utils.ListConfig;
 import com.jude.easyrecyclerview.EasyRecyclerView;
 import com.jude.easyrecyclerview.adapter.RecyclerArrayAdapter;
@@ -83,6 +82,7 @@ public class MyCollectFragment extends BaseListDataFragment<List<Food>> {
                 .setRefreshAble(true)
                 .setNoMoreAble(true);
     }
+
     @Override
     public void onInitData() {
         username = getArguments().getString("username");
@@ -90,13 +90,10 @@ public class MyCollectFragment extends BaseListDataFragment<List<Food>> {
     }
 
     @Override
-    protected void setData(List<MyCollect> o) {
-        for (MyCollect myCollect: o){
-            listFood.add(myCollect.getFood())
-        }
+    protected void setData(List<Food> o) {
         listFood = o;
         adapter.clear();
-        adapter.addAll(o);
+        adapter.addAll(listFood);
     }
 
 

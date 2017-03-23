@@ -12,9 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.foamtrace.photopicker.ImageConfig;
-
-import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobConfig;
+import com.pgyersdk.crash.PgyCrashManager;
 
 /**
  * author：Administrator on 2017/3/13 09:09
@@ -36,10 +34,10 @@ public abstract class BaseActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
         initAni();
-        initBmob();
         onInitData();
         onEvent();
         onInitView();
+        PgyCrashManager.register(this);
     }
     private void initAni(){
         TypedArray activityStyle = getTheme().obtainStyledAttributes(new int[] {android.R.attr.windowAnimationStyle});
@@ -57,20 +55,7 @@ public abstract class BaseActivity extends AppCompatActivity{
         config.minSize = 1 * 1024 * 1024; // 1Mb 图片大小
 
     }
-    private void initBmob() {
-        //第二：自v3.4.7版本开始,设置BmobConfig,允许设置请求超时时间、文件分片上传时每片的大小、文件的过期时间(单位为秒)，
-        BmobConfig config =new BmobConfig.Builder(this)
-        //设置appkey
-        .setApplicationId("d79087477318b1ba60f416d99c96800f")
-        //请求超时时间（单位为秒）：默认15s
-        .setConnectTimeout(30)
-        //文件分片上传时每片的大小（单位字节），默认512*1024
-        .setUploadBlockSize(1024*1024)
-        //文件的过期时间(单位为秒)：默认1800s
-        .setFileExpiration(2500)
-        .build();
-        Bmob.initialize(config);
-    }
+
     public void toast(String s) {
         Toast.makeText(this,s,Toast.LENGTH_SHORT).show();
     }
@@ -90,6 +75,7 @@ public abstract class BaseActivity extends AppCompatActivity{
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        PgyCrashManager.unregister();
     }
 
     @Override

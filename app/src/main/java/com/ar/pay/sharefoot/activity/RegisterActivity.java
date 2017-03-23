@@ -1,11 +1,7 @@
 package com.ar.pay.sharefoot.activity;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -14,15 +10,15 @@ import android.widget.TextView;
 
 import com.ar.pay.sharefoot.R;
 import com.ar.pay.sharefoot.base.BaseActivity;
-import com.ar.pay.sharefoot.base.BaseFragment;
 import com.ar.pay.sharefoot.bean.User;
-import com.ar.pay.sharefoot.sql.SqlHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 
 /**
  * author：Administrator on 2016/12/12 14:16
@@ -83,7 +79,7 @@ public class RegisterActivity extends BaseActivity {
     @OnClick(R.id.btn_register)
     public void onClick() {
         close();
-        String edPhone1 = edPhone.getText().toString();
+        final String edPhone1 = edPhone.getText().toString();
         if (edAccount.length() <3 || edAccount.length() > 12) {
             edAccount.setError("帐号长度不对，请输入3-12个字符");
             return;
@@ -104,7 +100,12 @@ public class RegisterActivity extends BaseActivity {
             @Override
             public void done(User s, BmobException e) {
                 if(e==null){
-                    toast("注册成功:" +s.toString());
+                    JMessageClient.register(edPhone1, edPwd.getText().toString(), new BasicCallback() {
+                        @Override
+                        public void gotResult(int i, String s) {
+                            toast("注册成功:" +s.toString());
+                        }
+                    });
                 }else{
                     toast(e.getMessage());
                 }

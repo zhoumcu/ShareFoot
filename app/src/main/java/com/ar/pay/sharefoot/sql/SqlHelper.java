@@ -7,18 +7,21 @@ import com.ar.pay.sharefoot.bean.Food;
 import com.ar.pay.sharefoot.bean.MyCollect;
 import com.ar.pay.sharefoot.bean.Person;
 import com.ar.pay.sharefoot.bean.User;
-import com.ar.pay.sharefoot.service.HandlerResponse;
 import com.ar.pay.sharefoot.service.OnResult;
 
 import org.json.JSONArray;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.datatype.BmobQueryResult;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.SQLQueryListener;
 import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -264,22 +267,30 @@ public class SqlHelper {
     /**
      * 查询数据
      */
-    public static void queryFood(final HandlerResponse onResult){
+    public void queryFood(String key){
+        String bql ="SELECT * FROM Food WHERE title LIKE=? or author LIKE=?";//查询所有的游戏得分记录
         BmobQuery query =new BmobQuery("Food");
+//        query.addWhereEqualTo("title",key);
         query.setLimit(20);
-        query.order("createdAt");
+        query.order("-createdAt");
         //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
-        query.findObjectsByTable(new QueryListener<JSONArray>() {
+//        query.findObjectsByTable(new QueryListener<JSONArray>() {
+//            @Override
+//            public void done(JSONArray ary, BmobException e) {
+//                if(e==null){
+//                    Log.i("bmob","查询成功："+ary.toString());
+//                    result.onSucess(Food.arrayFoodsFromData(ary.toString()));
+//                }else{
+//                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+//                }
+//            }
+//        });
+        query.doSQLQuery(bql, new SQLQueryListener<Food>() {
             @Override
-            public void done(JSONArray ary, BmobException e) {
-                if(e==null){
-                    Log.i("bmob","查询成功："+ary.toString());
-                    onResult.onSucess(Food.arrayFoodsFromData(ary.toString()));
-                }else{
-                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
-                }
+            public void done(BmobQueryResult<Food> ary, BmobException e) {
+                Log.i("bmob","查询成功："+ary.getCount());
             }
-        });
+        },key,key);
     }
     /**
      * 查询数据
@@ -315,20 +326,18 @@ public class SqlHelper {
             }
         });
     }
-    public static void createMyCollect(Food food,String username){
+    public static void createMyCollect(Food food, String username, final OnResult onResult){
         MyCollect collect = new MyCollect();
-        MyCollect.FoodEntity foodEntity = new MyCollect.FoodEntity();
-        foodEntity.setObjectId(food.getObjectId());
-        foodEntity.set__type("Pointer");
-        foodEntity.setClassName("Food");
         collect.setObjectId(food.getObjectId());
         collect.setUsername(username);
-        collect.setFood(foodEntity);
+        collect.setCollect(true);
+        collect.setFood(food);
         collect.save(new SaveListener<String>() {
             @Override
             public void done(String objectId,BmobException e) {
                 if(e==null){
                     Log.i("bmob","添加数据成功，返回objectId为："+objectId);
+                    onResult.onSucess(true);
                 }else{
                     Log.i("bmob","创建数据失败：" + e.getMessage());
                 }
@@ -347,7 +356,56 @@ public class SqlHelper {
             public void done(JSONArray ary, BmobException e) {
                 if(e==null){
                     Log.i("bmob","查询成功："+ary.toString());
-                    onResult.onSucess(MyCollect.arrayMyCollectFromData(ary.toString()););
+                    List<MyCollect> myCollects = MyCollect.arrayMyCollectFromData(ary.toString());
+                    List<Food> list = new ArrayList<Food>();
+                    for (MyCollect m: myCollects){
+                        list.add(m.getFood());
+                    }
+                    onResult.onSucess(list);
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+    }
+    public static void queryIsMyCollect(final String username, final Food food,final OnResult onResult){
+        BmobQuery query =new BmobQuery("MyCollect");
+        query.addWhereEqualTo("username",username);
+        BmobQuery query1 =new BmobQuery("MyCollect");
+        query1.addWhereEqualTo("food",food);
+        BmobQuery query2 =new BmobQuery("MyCollect");
+        query2.addWhereEqualTo("isCollect",true);
+        //最后组装完整的and条件
+        List<BmobQuery<MyCollect>> andQuerys = new ArrayList<BmobQuery<MyCollect>>();
+        andQuerys.add(query);
+        andQuerys.add(query1);
+        andQuerys.add(query2);
+        BmobQuery query3 = new BmobQuery("MyCollect");
+        query3.and(andQuerys);
+        query3.setLimit(1);
+        query3.order("-createdAt");
+        //v3.5.0版本提供`findObjectsByTable`方法查询自定义表名的数据
+        query3.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray ary, BmobException e) {
+                if(e==null){
+                    Log.i("bmob","查询成功："+ary.toString());
+                    onResult.onSucess(MyCollect.arrayMyCollectFromData(ary.toString()));
+                }else{
+                    Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
+                }
+            }
+        });
+    }
+    public static void deleteMyCollect(String id, final OnResult onResult){
+        MyCollect myCollect = new MyCollect();
+        myCollect.setObjectId(id);
+        myCollect.delete(new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                if(e==null){
+                    Log.i("bmob","成功");
+                    onResult.onSucess(false);
                 }else{
                     Log.i("bmob","失败："+e.getMessage()+","+e.getErrorCode());
                 }

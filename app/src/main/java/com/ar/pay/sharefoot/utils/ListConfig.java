@@ -8,7 +8,7 @@ import android.view.View;
  * email：1032324589@qq.com
  */
 
-public class ListConfig {
+public class ListConfig implements Cloneable{
     public static ListConfig Default = new ListConfig();
     public static void setDefaultListConfig(ListConfig config){
         Default = config;

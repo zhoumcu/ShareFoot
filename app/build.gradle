@@ -47,13 +47,18 @@ android {
             }
         }
     }
-
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     /**兼容Android6.0系统所需，如果这句话报错，可在dependencies标签下使用compile 'cn.bmob.android:http-legacy:1.0'**/
     useLibrary 'org.apache.http.legacy'
 }
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(include: ['*.jar'], dir: 'src/main/libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -80,5 +85,9 @@ dependencies {
     //图片选择器
     compile 'com.foamtrace:photopicker:1.0'
     //毛玻璃效果
-    compile 'com.wingjay:blurimageviewlib:2.0.1'
+    //compile 'com.wingjay:blurimageviewlib:2.0.1'
+    //推送
+    compile 'com.pgyersdk:sdk:2.5.6'
+    //
+    compile 'de.hdodenhof:circleimageview:2.1.0'
 }

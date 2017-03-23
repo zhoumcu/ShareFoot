@@ -1,4 +1,4 @@
-# Add project specific ProGuard rules here.
+c# Add project specific ProGuard rules here.
 # By default, the flags in this file are appended to flags specified
 # in F:\android\sdk/tools/proguard/proguard-android.txt
 # You can edit the include path and order by changing the proguardFiles
@@ -72,3 +72,28 @@
 -keep class com.android.internal.http.multipart.**{*;}
 -keep class org.apache.commons.**{*;}
 -keep class org.apache.http.**{*;}
+
+-dontwarn com.pgyersdk.**
+-keep class com.pgyersdk.** { *; }
+
+-keep class com.mob.**{*;}
+
+-dontoptimize
+-dontpreverify
+-keepattributes  EnclosingMethod,Signature
+-dontwarn cn.jpush.**
+-keep class cn.jpush.** { *; }
+
+-dontwarn cn.jiguang.**
+-keep class cn.jiguang.** { *; }
+
+ -keepclassmembers class ** {
+     public void onEvent*(**);
+ }
+
+#========================gson================================
+-dontwarn com.google.**
+-keep class com.google.gson.** {*;}
+
+#========================protobuf================================
+-keep class com.google.protobuf.** {*;}

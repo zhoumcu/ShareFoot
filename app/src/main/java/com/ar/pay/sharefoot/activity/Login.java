@@ -1,14 +1,10 @@
 package com.ar.pay.sharefoot.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ar.pay.sharefoot.MainActivity;
@@ -22,6 +18,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
+import cn.jpush.im.android.api.JMessageClient;
+import cn.jpush.im.api.BasicCallback;
 
 /**
  * author：Administrator on 2017/3/1 09:07
@@ -33,26 +31,14 @@ public class Login extends BaseActivity {
 
     @BindView(R.id.phone)
     EditText phone;
-    @BindView(R.id.imgCancel)
-    ImageView imgCancel;
-    @BindView(R.id.tv_find)
-    TextView tvFind;
-    @BindView(R.id.layoutPhone)
-    RelativeLayout layoutPhone;
     @BindView(R.id.btn_pwd)
     TextView btnPwd;
     @BindView(R.id.tv_pwd)
     EditText tvPwd;
-    @BindView(R.id.rl_1)
-    RelativeLayout rl1;
     @BindView(R.id.btnSure)
     Button btnSure;
-    @BindView(R.id.btnClose)
-    Button btnClose;
-    @BindView(R.id.tv_load)
-    TextView tvLoad;
-    @BindView(R.id.btnRegister)
-    LinearLayout btnRegister;
+    @BindView(R.id.tv_register)
+    TextView tvRegister;
 
     @Override
     public void onUICreate(Bundle savedInstanceState) {
@@ -72,6 +58,8 @@ public class Login extends BaseActivity {
 
     @Override
     public void onInitData() {
+        phone.setText("admin");
+        tvPwd.setText("123456");
 
     }
 
@@ -88,13 +76,13 @@ public class Login extends BaseActivity {
         }
     }
 
-    @OnClick({R.id.btnSure, R.id.btnRegister})
+    @OnClick({R.id.btnSure, R.id.tv_register})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btnSure:
                 close();
-                String phone1 = phone.getText().toString();
-                String mPassword = tvPwd.getText().toString();
+                final String phone1 = phone.getText().toString();
+                final String mPassword = tvPwd.getText().toString();
 //        if (phone.length() != 11) {
 //            getView().phone.setError("手机号格式错误");
 //            return;
@@ -114,20 +102,25 @@ public class Login extends BaseActivity {
                 user.login(new SaveListener<User>() {
                     @Override
                     public void done(User bmobUser, BmobException e) {
-                        if(e==null){
-                            toast("登录成功:");
-                            SharedPreferences.getInstance().saveObject("user",bmobUser);
-                            startActivityWithData(MainActivity.class);
-                            finish();
-                            //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
-                            //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
-                        }else{
+                        if (e == null) {
+                            SharedPreferences.getInstance().saveObject("user", bmobUser);
+                            JMessageClient.login(phone1, mPassword, new BasicCallback() {
+                                @Override
+                                public void gotResult(int i, String s) {
+                                    toast("登录成功:");
+                                    startActivityWithData(MainActivity.class);
+                                    finish();
+                                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
+                                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
+                                }
+                            });
+                        } else {
                             toast(e.getMessage());
                         }
                     }
                 });
                 break;
-            case R.id.btnRegister:
+            case R.id.tv_register:
                 startActivityWithData(RegisterActivity.class);
                 break;
         }
