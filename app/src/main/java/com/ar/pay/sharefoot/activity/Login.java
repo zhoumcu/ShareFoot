@@ -10,16 +10,13 @@ import android.widget.TextView;
 import com.ar.pay.sharefoot.MainActivity;
 import com.ar.pay.sharefoot.R;
 import com.ar.pay.sharefoot.base.BaseActivity;
-import com.ar.pay.sharefoot.bean.User;
+import com.ar.pay.sharefoot.interfaces.presenter.LoginPresenterImpl;
+import com.ar.pay.sharefoot.interfaces.view.LoginView;
 import com.ar.pay.sharefoot.utils.SharedPreferences;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-import cn.jpush.im.android.api.JMessageClient;
-import cn.jpush.im.api.BasicCallback;
 
 /**
  * author：Administrator on 2017/3/1 09:07
@@ -27,7 +24,7 @@ import cn.jpush.im.api.BasicCallback;
  * email：1032324589@qq.com
  */
 
-public class Login extends BaseActivity {
+public class Login extends BaseActivity implements LoginView {
 
     @BindView(R.id.phone)
     EditText phone;
@@ -39,6 +36,7 @@ public class Login extends BaseActivity {
     Button btnSure;
     @BindView(R.id.tv_register)
     TextView tvRegister;
+    private LoginPresenterImpl loginPresenter;
 
     @Override
     public void onUICreate(Bundle savedInstanceState) {
@@ -53,7 +51,7 @@ public class Login extends BaseActivity {
 
     @Override
     public void onInitView() {
-
+        loginPresenter = new LoginPresenterImpl();
     }
 
     @Override
@@ -95,34 +93,44 @@ public class Login extends BaseActivity {
                     tvPwd.setError("密码应为5-12位");
                     return;
                 }
-                User user = new User();
-                user.setPassword(mPassword);
-                user.setMobilePhoneNumber(phone1);
-                user.setUsername(phone1);
-                user.login(new SaveListener<User>() {
-                    @Override
-                    public void done(User bmobUser, BmobException e) {
-                        if (e == null) {
-                            SharedPreferences.getInstance().saveObject("user", bmobUser);
-                            JMessageClient.login(phone1, mPassword, new BasicCallback() {
-                                @Override
-                                public void gotResult(int i, String s) {
-                                    toast("登录成功:");
-                                    startActivityWithData(MainActivity.class);
-                                    finish();
-                                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
-                                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
-                                }
-                            });
-                        } else {
-                            toast(e.getMessage());
-                        }
-                    }
-                });
+                loginPresenter.login(phone,tvPwd,this);
+//                User user = new User();
+//                user.setPassword(mPassword);
+//                user.setMobilePhoneNumber(phone1);
+//                user.setUsername(phone1);
+//                user.login(new SaveListener<User>() {
+//                    @Override
+//                    public void done(User bmobUser, BmobException e) {
+//                        if (e == null) {
+//                            SharedPreferences.getInstance().saveObject("user", bmobUser);
+//                            JMessageClient.login(phone1, mPassword, new BasicCallback() {
+//                                @Override
+//                                public void gotResult(int i, String s) {
+//                                    toast("登录成功:");
+//                                    startActivityWithData(MainActivity.class);
+//                                    finish();
+//                                    SharedPreferences.getInstance().putBoolean("is_login",true);
+//                                    //通过BmobUser user = BmobUser.getCurrentUser()获取登录成功后的本地用户信息
+//                                    //如果是自定义用户对象MyUser，可通过MyUser user = BmobUser.getCurrentUser(MyUser.class)获取自定义用户信息
+//                                }
+//                            });
+//                        } else {
+//                            toast(e.getMessage());
+//                        }
+//                    }
+//                });
                 break;
             case R.id.tv_register:
                 startActivityWithData(RegisterActivity.class);
                 break;
         }
+    }
+
+    @Override
+    public void loginResult(int i, String s) {
+        toast("登录成功:");
+        startActivityWithData(MainActivity.class);
+        finish();
+        SharedPreferences.getInstance().putBoolean("is_login",true);
     }
 }

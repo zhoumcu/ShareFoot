@@ -79,7 +79,7 @@ public class RegisterActivity extends BaseActivity {
     @OnClick(R.id.btn_register)
     public void onClick() {
         close();
-        final String edPhone1 = edPhone.getText().toString();
+        final String edPhone1 = edAccount.getText().toString();
         if (edAccount.length() <3 || edAccount.length() > 12) {
             edAccount.setError("帐号长度不对，请输入3-12个字符");
             return;
@@ -94,7 +94,7 @@ public class RegisterActivity extends BaseActivity {
         }
         User user = new User();
         user.setPassword(edPwd.getText().toString());
-        user.setMobilePhoneNumber(edPhone1);
+//        user.setMobilePhoneNumber(edPhone1);
         user.setUsername(edPhone1);
         user.signUp(new SaveListener<User>() {
             @Override

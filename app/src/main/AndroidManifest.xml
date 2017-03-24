@@ -178,7 +178,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
+        </activity>
             <!-- 极光推送 im -->
             <!-- Required SDK 核心功能-->
             <!-- 可配置android:process参数将PushService放在其他进程中 -->
@@ -248,7 +248,7 @@
             <meta-data
                 android:name="JPUSH_APPKEY"
                 android:value="2cf92e1d38f8db310547a678" />
-        </activity>
+
     </application>
 
 </manifest>

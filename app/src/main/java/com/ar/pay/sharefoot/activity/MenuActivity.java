@@ -208,10 +208,4 @@ public class MenuActivity extends BaseSwipeActivity {
         new GlideImageLoader().loadGridItemView(imgLogo, paths.get(0), R.id.img_add, 50, 50);
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
 }

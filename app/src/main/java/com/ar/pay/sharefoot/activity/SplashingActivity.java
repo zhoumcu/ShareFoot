@@ -8,9 +8,10 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.TextView;
 
+import com.ar.pay.sharefoot.MainActivity;
 import com.ar.pay.sharefoot.R;
+import com.ar.pay.sharefoot.utils.SharedPreferences;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +54,11 @@ public class SplashingActivity extends AppCompatActivity {
             @Override
             public void onAnimationEnd(Animation arg0) {
                 arg0.setFillAfter(true);
-                startActivityWithData(Login.class);
+                if(SharedPreferences.getInstance().getBoolean("is_login",false)){
+                    startActivityWithData(MainActivity.class);
+                }else{
+                    startActivityWithData(Login.class);
+                }
                 overridePendingTransition(R.anim.slide_from_right, R.anim.slide_in_left);
                 finish();
             }
