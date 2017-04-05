@@ -8,16 +8,19 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.ar.pay.sharefoot.activity.EditTextActivity;
 import com.ar.pay.sharefoot.activity.MenuActivity;
 import com.ar.pay.sharefoot.activity.SearchActivity;
 import com.ar.pay.sharefoot.base.BaseDataActivity;
 import com.ar.pay.sharefoot.bean.Category;
+import com.ar.pay.sharefoot.bean.User;
 import com.ar.pay.sharefoot.fragment.CookBookFragment;
 import com.ar.pay.sharefoot.fragment.FootFragment;
 import com.ar.pay.sharefoot.utils.SharedPreferences;
 import com.lhh.apst.library.AdvancedPagerSlidingTabStrip;
+import com.review.signature.Review;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,13 +61,17 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
 
     @Override
     public void onInitData() {
-
-        if (SharedPreferences.getInstance().readObject("cateroty") == null) {
-            sqlHelper.queryCategory();
-        } else {
-            categoryList = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
-            pareseData(categoryList);
+        User user = (User) SharedPreferences.getInstance().readObject("user");
+        if(user.isEdit()){
+            fab.setVisibility(View.VISIBLE);
         }
+//        Review.MD5Review(this,"com.ar.pay.sharefoot","761a8e3374d49b746beddf9674b9d7e9");
+//        if (SharedPreferences.getInstance().readObject("cateroty") == null) {
+            sqlHelper.queryCategory();
+//        } else {
+//            categoryList = (List<Category>) SharedPreferences.getInstance().readObject("cateroty");
+//            pareseData(categoryList);
+//        }
     }
 
     @Override
@@ -133,11 +140,11 @@ public class MainActivity extends BaseDataActivity<List<Category>> {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_search:
-                toast("action_search");
+                //toast("action_search");
                 startActivityWithData(SearchActivity.class);
                 break;
             case android.R.id.home:
-                toast("home");
+                //toast("home");
                 startActivityWithData(MenuActivity.class);
                 break;
         }

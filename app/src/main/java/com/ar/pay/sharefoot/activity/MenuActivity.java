@@ -88,12 +88,12 @@ public class MenuActivity extends BaseSwipeActivity {
 
     @Override
     public void onInitView() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                Fglass.blur(imgBg, bgGlass, 2, 10);
-            }
-        }, 10);
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                Fglass.blur(imgBg, bgGlass, 2, 10);
+//            }
+//        }, 10);
     }
 
     @Override

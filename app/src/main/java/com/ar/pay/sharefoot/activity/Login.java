@@ -56,9 +56,8 @@ public class Login extends BaseActivity implements LoginView {
 
     @Override
     public void onInitData() {
-        phone.setText("admin");
-        tvPwd.setText("123456");
-
+//        phone.setText("admin");
+//        tvPwd.setText("123456");
     }
 
     @Override
